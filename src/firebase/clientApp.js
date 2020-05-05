@@ -1,8 +1,8 @@
 import firebase from 'firebase/app'
-import 'firebase/auth' // If you need it
-import 'firebase/firestore' // If you need it
-import 'firebase/storage' // If you need it
-import 'firebase/analytics' // If you need it
+import "firebase/firestore";
+// import 'firebase/auth' // If you need it
+// import 'firebase/storage' // If you need it
+// import 'firebase/analytics' // If you need it
 
 const clientCredentials = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -12,13 +12,22 @@ const clientCredentials = {
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID
+}
+
+console.log("About to initialize firebase app")
+
+if (firebase.apps.length === 0) {
+  firebase.initializeApp(clientCredentials);
 }
 
 // Check that `window` is in scope for the analytics module!
 if (typeof window !== 'undefined' && !firebase.apps.length) {
-  firebase.initializeApp(clientCredentials)
+  // firebase.initializeApp(clientCredentials)
   // To enable analytics. https://firebase.google.com/docs/analytics/get-started
-  if ('measurementId' in clientCredentials) firebase.analytics()
+  // if ('measurementId' in clientCredentials) firebase.analytics()
 }
 
-export default firebase
+console.log("Initialized firebase app")
+
+export const db = firebase.firestore();

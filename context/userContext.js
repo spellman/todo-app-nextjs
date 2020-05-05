@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react'
-import firebase from '../firebase/clientApp'
+import firebase from '../src/firebase/clientApp'
 
 export const UserContext = createContext()
 
