@@ -6,9 +6,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import Alert from "@material-ui/lab/Alert";
 import AlertTitle from "@material-ui/lab/AlertTitle";
 import React from "react";
-import * as reactRedux from "react-redux";
 
-const flash = ({dispatch, flashMessage}) => {
+const Flash = ({dispatch, flashMessage}) => {
     const handleClose = (fn) =>
         (event, reason) => {
             if (reason === 'clickaway') {return;}
@@ -63,12 +62,5 @@ const flash = ({dispatch, flashMessage}) => {
         </Alert>
     </Snackbar>;
 };
-
-const Flash = reactRedux.connect(
-    (state) => ({
-        flashMessage: state.flashMessages[0]
-    }),
-    (dispatch) => ({dispatch})
-)(flash);
 
 export default Flash;

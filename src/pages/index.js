@@ -58,7 +58,7 @@ const homePage = ({dispatch, showAddTask, flashMessages}) => (
             <TaskList />
 
             {0 < flashMessages.length &&
-             <Flash />}
+             <Flash dispatch={dispatch} flashMessage={flashMessages[0]} />}
         </Container>
     </React.Fragment>
 );
