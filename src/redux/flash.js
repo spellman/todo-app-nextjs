@@ -58,6 +58,7 @@ export const reducer = (state = initialState, action) => {
                     {
                         type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED}/${TASK_COMPLETEDNESS_CHANGED_EXTERNALLY}`,
                         taskId: action.id,
+                        // TODO: Use a time provider so that you can test easily.
                         id: new Date(),
                         severity: "info",
                         title: `This task has been marked ${action.isComplete
@@ -74,6 +75,7 @@ export const reducer = (state = initialState, action) => {
                 {
                     type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED}/${TASK_CHANGED_EXTERNALLY}`,
                     taskId: action.id,
+                    // TODO: Use a time provider so that you can test easily.
                     id: new Date(),
                     severity: "warning",
                     title: "This task has been changed. Updating will overwrite.",
@@ -90,6 +92,7 @@ export const reducer = (state = initialState, action) => {
                 {
                     type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED}/${TASK_DELETED_EXTERNALLY}`,
                     taskId: action.id,
+                    // TODO: Use a time provider so that you can test easily.
                     id: new Date(),
                     severity: "warning",
                     title: "This task has been deleted. Updating will also resurrect.",
