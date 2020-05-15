@@ -95,7 +95,7 @@ const TaskEditForm = ({dispatch, id, task}) => (
                         <Grid item>
                             <Box pt={1} pb={1}>
                                 <Button
-                                    onClick={() => {dispatch(tasks.hideEditTask(id))}}
+                                    onClick={() => {dispatch(tasks.cancelEditTask(id))}}
                                     disabled={isSubmitting}
                                     color="default"
                                     variant="contained"

@@ -80,7 +80,7 @@ export const reducer = (state = initialState, action) => {
                     severity: "warning",
                     title: "This task has been changed. Updating will overwrite.",
                     actions: [
-                        {key: "cancelEditing", buttonText: "Cancel", reduxAction: tasks.hideEditTask(action.id)},
+                        {key: "cancelEditing", buttonText: "Cancel", reduxAction: tasks.cancelEditTask(action.id)},
                         {key: "noOp", buttonText: "Continue"}
                     ]
                 }
@@ -97,7 +97,7 @@ export const reducer = (state = initialState, action) => {
                     severity: "warning",
                     title: "This task has been deleted. Updating will also resurrect.",
                     actions: [
-                        {key: "cancelEditing", buttonText: "Cancel", reduxAction: tasks.hideEditTask(action.id)},
+                        {key: "cancelEditing", buttonText: "Cancel", reduxAction: tasks.cancelEditTask(action.id)},
                         {key: "noOp", buttonText: "Continue"}
                     ]
                 }
@@ -106,7 +106,7 @@ export const reducer = (state = initialState, action) => {
         case DISMISS_MESSAGE:
             return state.slice(1);
 
-        case tasks.HIDE_EDIT_TASK:
+        case tasks.CANCEL_EDIT_TASK:
             return util.dropWhile(
                 (message) => message
                              && isMessageForExternalChangeToTaskBeingEdited(message)

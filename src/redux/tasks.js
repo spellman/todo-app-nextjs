@@ -31,10 +31,10 @@ export const editTask = (id) => ({
 
 
 
-export const HIDE_EDIT_TASK = "HIDE_EDIT_TASK";
+export const CANCEL_EDIT_TASK = "CANCEL_EDIT_TASK";
 
-export const hideEditTask = (id) => ({
-    type: HIDE_EDIT_TASK,
+export const cancelEditTask = (id) => ({
+    type: CANCEL_EDIT_TASK,
     id
 });
 
@@ -171,7 +171,7 @@ export const updateTask = (id, updatedTask) =>
 
         dispatch(upsertTask(id, updatedTaskToCommitToReduxStore));
         dispatch(updateTaskInFirestore(id, diffToCommitToFirestore));
-        dispatch(hideEditTask());
+        dispatch(cancelEditTask());
     };
 
 export const updateTaskCompletedness = (id, task, isComplete) => updateTask(id, {...task, isComplete});
@@ -296,7 +296,7 @@ export const reducer = (state = initialState, action) => {
                 taskToEdit: action.id
             };
 
-        case HIDE_EDIT_TASK:
+        case CANCEL_EDIT_TASK:
             return {
                 ...state,
                 taskToEdit: null
