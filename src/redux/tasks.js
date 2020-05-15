@@ -1,4 +1,5 @@
 import "../firebase/clientApp";
+import * as fbTasks from "../firebase/tasks";
 import * as flash from "./flash";
 import * as util from "../util";
 import dateFnsIsDate from "date-fns/isDate";
@@ -90,14 +91,20 @@ export const createTask = (makeId, task) =>
 
 
 
-export const updateTaskInFirestore = (id, taskUpdate) =>
+export const updateTaskInFirestore = (id, taskDiff, updatedTask) =>
     (dispatch, getState, tasksCollection) => {
-        console.log("updateTaskInFirestore task:", taskUpdate);
-        console.log("updateTaskInFirestore taskDoc:", taskToDocTask(taskUpdate));
+        console.log("updateTaskInFirestore task:", taskDiff);
+        console.log("updateTaskInFirestore taskDoc:", taskToDocTask(taskDiff));
         return tasksCollection.doc(id)
-                              .update(taskToDocTask(taskUpdate))
-                              .then(() => console.log("update task success:", id, "taskUpdate:", taskUpdate, "doc task:", taskToDocTask(taskUpdate)))
-                              .catch((error) => console.log("update task failure:", id, "taskUpdate:", taskUpdate, "doc task:", taskToDocTask(taskUpdate), "\nerror:", error));
+                              .update(taskToDocTask(taskDiff))
+                              .then(() => console.log("update task success:", id, "taskDiff:", taskDiff, "doc task:", taskToDocTask(taskDiff)))
+                              .catch((error) => {
+                                  console.log("update task failure:", id, "taskDiff:", taskDiff, "doc task:", taskToDocTask(taskDiff), "\nerror:", error);
+                                  if (error.name === "FirebaseError" && error.code === "not-found") {
+                                      dispatch(removeTask(id));
+                                      dispatch(createTask(fbTasks.taskId, updatedTask));
+                                  }
+                              });
     };
 
 // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
@@ -151,11 +158,9 @@ export const taskDiff = (initial, final, keysToDiff) => {
     );
 };
 
-export const updateTask = (id, updatedTask) =>
+export const updateTask = (id, task, diff) =>
     (dispatch, getState) => {
-        const existingTask = getState().tasks.tasksById[id];
-        const diff = taskDiff(existingTask, updatedTask);
-        const updatedTaskToCommitToReduxStore = {...updatedTask};
+        const updatedTaskToCommitToReduxStore = {...task, ...diff};
         const diffToCommitToFirestore = {...diff};
 
         // If isComplete has changed to false, then delete completionDate.
@@ -164,18 +169,19 @@ export const updateTask = (id, updatedTask) =>
             diffToCommitToFirestore.completionDate = firebase.firestore.FieldValue.delete();
         }
 
-        // If completionDate has been added, then ensure isComplete to true.
-        if (dateFnsIsDate(diff.completionDate) && !existingTask.isComplete) {
+        // If completionDate is a date, then ensure isComplete is true.
+        if (dateFnsIsDate(diff.completionDate) && !task.isComplete) {
             updatedTaskToCommitToReduxStore.isComplete = true;
             diffToCommitToFirestore.isComplete = true;
         }
 
         dispatch(upsertTask(id, updatedTaskToCommitToReduxStore));
-        dispatch(updateTaskInFirestore(id, diffToCommitToFirestore));
+        dispatch(updateTaskInFirestore(id, diffToCommitToFirestore, updatedTaskToCommitToReduxStore));
         dispatch(cancelEditTask());
     };
 
-export const updateTaskCompletedness = (id, task, isComplete) => updateTask(id, {...task, isComplete});
+export const updateTaskCompletedness = (id, task, isComplete) =>
+    updateTask(id, task, taskDiff(task, {isComplete}, ["isComplete"]));
 
 export const deleteTaskInFirestore = (id) =>
     (dispatch, getState, tasksCollection) =>
@@ -190,7 +196,7 @@ export const deleteTask = (id) =>
         dispatch(removeTask(id));
     };
 
-const isEditingTask = (id, state) => id === state.tasks.taskToEdit;
+const isEditingTask = (id, state) => state.tasks.taskToEdit && id === state.tasks.taskToEdit.id;
 
 const isChangeToTaskCompletednessOnly = (taskDiff) => {
     const diffKeys = Object.keys(taskDiff);
@@ -294,7 +300,10 @@ export const reducer = (state = initialState, action) => {
         case EDIT_TASK:
             return {
                 ...state,
-                taskToEdit: action.id
+                taskToEdit: {
+                    id: action.id,
+                    task: state.tasksById[action.id]
+                }
             };
 
         case CANCEL_EDIT_TASK:

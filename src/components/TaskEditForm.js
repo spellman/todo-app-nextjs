@@ -22,8 +22,14 @@ const TaskEditForm = ({dispatch, id, task}) => (
         onSubmit={(values, {setSubmitting}) => {
             const xformedValues = util.xformValues(values, [util.trim,
                                                             util.truncateDateToDay]);
+            const keysToDiff = [
+                "name",
+                "description",
+                "targetCompletionDate",
+                "completionDate"
+            ];
             setSubmitting(false);
-            dispatch(tasks.updateTask(id, {...task, ...xformedValues}));
+            dispatch(tasks.updateTask(id, task, tasks.taskDiff(task, xformedValues, keysToDiff)));
         }}
     >
         {({submitForm, isSubmitting}) =>(

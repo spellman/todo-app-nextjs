@@ -95,7 +95,7 @@ export const reducer = (state = initialState, action) => {
                     // TODO: Use a time provider so that you can test easily.
                     id: new Date(),
                     severity: "warning",
-                    title: "This task has been deleted. Updating will also resurrect.",
+                    title: "This task has been deleted but you still have the information here, in this browser tab. Cancel editing to accept deletion or continue editing to create a new task from this information.",
                     actions: [
                         {key: "cancelEditing", buttonText: "Cancel", reduxAction: tasks.cancelEditTask(action.id)},
                         {key: "noOp", buttonText: "Continue"}

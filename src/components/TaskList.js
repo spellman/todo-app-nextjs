@@ -86,35 +86,43 @@ const taskCompareFn = ({key, direction}) => {
     };
 };
 
-const taskList = ({tasksById, taskToEdit}) => {
+const taskList = ({tasksPlusEditingTaskById, taskToEdit}) => {
     const compareFn = taskCompareFn({key: "createdDate", direction: "asc"});
 
     return <List>
-        {
-            Object.entries(tasksById)
-                  .sort(([aId, aTask], [bId, bTask]) => compareFn(aTask, bTask))
-                  .map(([id, task]) =>
-                      <ListItem
-                          key={id}
-                          divider={true}
-                          disableGutters
-                      >
-                          {
-                              id === taskToEdit
-                              ? <TaskEdit id={id} task={task} />
-                              : <Task id={id} task={task} />
-                          }
-                      </ListItem>
-                  )
-        }
+        {Object.entries(tasksPlusEditingTaskById)
+               .sort(([aId, aTask], [bId, bTask]) => compareFn(aTask, bTask))
+               .map(([id, task]) =>
+                   <ListItem
+                       key={id}
+                       divider={true}
+                       disableGutters
+                   >
+                       {
+                           taskToEdit && id === taskToEdit.id
+                           ? <TaskEdit id={taskToEdit.id} task={taskToEdit.task} />
+                           : <Task id={id} task={task} />
+                       }
+                   </ListItem>
+               )}
     </List>;
 };
 
 const TaskList = reactRedux.connect(
-    (state) => ({
-        tasksById: state.tasks.tasksById,
-        taskToEdit: state.tasks.taskToEdit
-    })
+    (state) => {
+        // We want to re-render the taskList if tasks change UNLESS we are
+        // editing that task.
+        // During editing, the task is not displayed and we don't want the form
+        // to re-render if the task is changed by another client.
+        const tasksPlusEditingTaskById = state.tasks.taskToEdit == null
+            ? state.tasks.tasksById
+            : {...state.tasks.tasksById, [state.tasks.taskToEdit.id]: state.tasks.taskToEdit.task};
+
+        return {
+            tasksPlusEditingTaskById: tasksPlusEditingTaskById,
+            taskToEdit: state.tasks.taskToEdit
+        };
+    }
 )(taskList);
 
 export default TaskList;
