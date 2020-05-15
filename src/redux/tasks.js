@@ -84,7 +84,7 @@ export const createTask = (makeId, task) =>
     (dispatch) => {
         console.log("createTask task:", task);
         const id = makeId();
-        const augmentedTask = {...task, createdDate: util.today(), isComplete: dateFnsIsDate(task.completionDate)};
+        const augmentedTask = {...task, createdDate: new Date(), isComplete: dateFnsIsDate(task.completionDate)};
         dispatch(upsertTask(id, augmentedTask));
         dispatch(createTaskInFirestore(id, augmentedTask));
     };
