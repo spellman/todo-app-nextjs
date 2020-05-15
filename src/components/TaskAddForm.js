@@ -27,8 +27,8 @@ const taskAddForm = ({createTask}) => (
                                                             util.removeBlank,
                                                             util.truncateDateToDay]);
             setSubmitting(false);
-            resetForm();
             createTask(xformedValues);
+            resetForm();
         }}
     >
         {({submitForm, isSubmitting}) =>(
