@@ -1,7 +1,7 @@
+import "../firebase/clientApp";
 import * as flash from "./flash";
 import * as util from "../util";
 import dateFnsIsDate from "date-fns/isDate";
-import "../firebase/clientApp";
 import dateFnsIsEqual from "date-fns/isEqual";
 import firebase from 'firebase/app'
 import "firebase/firestore";
@@ -78,8 +78,6 @@ export const createTaskInFirestore = (id, task) =>
                               .catch((error) => console.log("create task failure:", id, "task:", task, "doc task:", taskToDocTask(task), "\nerror:", error));
     };
 
-
-// makeId is a function that generates an id.
 export const createTask = (makeId, task) =>
     (dispatch) => {
         console.log("createTask task:", task);
@@ -101,8 +99,6 @@ export const updateTaskInFirestore = (id, taskUpdate) =>
                               .then(() => console.log("update task success:", id, "taskUpdate:", taskUpdate, "doc task:", taskToDocTask(taskUpdate)))
                               .catch((error) => console.log("update task failure:", id, "taskUpdate:", taskUpdate, "doc task:", taskToDocTask(taskUpdate), "\nerror:", error));
     };
-
-
 
 // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set
 const setUnion = (a, b) => {
@@ -179,8 +175,6 @@ export const updateTask = (id, updatedTask) =>
     };
 
 export const updateTaskCompletedness = (id, task, isComplete) => updateTask(id, {...task, isComplete});
-
-
 
 export const deleteTaskInFirestore = (id) =>
     (dispatch, getState, tasksCollection) =>

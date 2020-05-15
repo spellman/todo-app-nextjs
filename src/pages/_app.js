@@ -69,7 +69,6 @@ const store = redux.createStore(rootReducer, undefined, enhancer);
 // be listening while it is in existence.
 // FIXME: Not true -- if it stopped on unmount, then I wouldn't have multiple
 // subscribers at once because of hot-reloading in development.
-// TODO: DO I CARE?
 const tasksChangesUnsubscribe = fbTasks.tasksCollection.onSnapshot(
     function(snapshot) {
         snapshot.docChanges().map((change) => {
@@ -118,7 +117,6 @@ const tasksChangesUnsubscribe = fbTasks.tasksCollection.onSnapshot(
             }
         })
     });
-
 
 // From https://github.com/mui-org/material-ui/blob/0cd5819e5c84a0d7ed079209824fc74f94109312/examples/nextjs/pages/_app.js
 export default function MyApp(props) {
