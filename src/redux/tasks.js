@@ -109,16 +109,17 @@ const setUnion = (a, b) => {
     return union;
 }
 
-const taskDiff = (initial, final) => {
-    // intial and final are each either a task or an object with a subset of the
-    // keys and values of a task.
+export const taskDiff = (initial, final, keysToDiff) => {
+    // initial and final are each objects with a subset  of the keys and values
+    // of a task. (Not necessarily the same subsets.)
     // NOTE: This is NOT a general or recursive diff function.
+    keysToDiff = keysToDiff || [...setUnion(Object.keys(initial), Object.keys(final)).values()];
 
+    console.log("keysToDiff", keysToDiff);
     console.log("initial", initial);
     console.log("final", final);
 
-    const allKeys = setUnion(Object.keys(initial), Object.keys(final));
-    return [...allKeys.values()].reduce(
+    return keysToDiff.reduce(
         (taskDiffAcc, k) => {
             const initial_v = initial[k];
             const final_v = final[k];
