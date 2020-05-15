@@ -1,6 +1,7 @@
 import * as util from "../util";
 import dateFnsIsDate from "date-fns/isDate";
 import "../firebase/clientApp";
+import dateFnsIsEqual from "date-fns/isEqual";
 import firebase from 'firebase/app'
 import "firebase/firestore";
 
@@ -112,7 +113,7 @@ const setUnion = (a, b) => {
 const taskDiff = (initial, final) => {
     // intial and final are each either a task or an object with a subset of the
     // keys and values of a task.
-    // NOTE: This is NOT a recursive diff function.
+    // NOTE: This is NOT a general or recursive diff function.
 
     console.log("initial", initial);
     console.log("final", final);
@@ -120,17 +121,30 @@ const taskDiff = (initial, final) => {
     const allKeys = setUnion(Object.keys(initial), Object.keys(final));
     return [...allKeys.values()].reduce(
         (taskDiffAcc, k) => {
-            switch (true) {
-                case (initial[k] == undefined && final[k] == undefined):
+            const initial_v = initial[k];
+            const final_v = final[k];
+
+            if (initial_v == undefined && final_v == undefined) {
+                return taskDiffAcc;
+            }
+            else if (initial_v == undefined && final_v != undefined) {
+                return {...taskDiffAcc, [k]: final_v};
+            }
+            else if (initial_v != undefined && final_v == undefined) {
+                return {...taskDiffAcc, [k]: firebase.firestore.FieldValue.delete()};
+            }
+            else if (initial_v != undefined && final_v != undefined) {
+                if (dateFnsIsDate(initial_v)
+                    && dateFnsIsDate(final_v)
+                    && dateFnsIsEqual(initial_v, final_v)) {
                     return taskDiffAcc;
-                case (initial[k] == undefined && final[k] != undefined):
-                    return {...taskDiffAcc, [k]: final[k]};
-                case (initial[k] != undefined && final[k] == undefined):
-                    return {...taskDiffAcc, [k]: firebase.firestore.FieldValue.delete()};
-                case (initial[k] != undefined && final[k] != undefined):
-                    return initial[k] === final[k]
-                           ? taskDiffAcc
-                           : {...taskDiffAcc, [k]: final[k]};
+                }
+                else if (initial_v === final_v) {
+                    return taskDiffAcc;
+                }
+                else {
+                    return {...taskDiffAcc, [k]: final_v};
+                }
             }
         },
         {}
