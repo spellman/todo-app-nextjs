@@ -172,9 +172,9 @@ export const updateTask = (id, updatedTask) =>
             diffToCommitToFirestore.isComplete = true;
         }
 
-        dispatch(hideEditTask());
         dispatch(upsertTask(id, updatedTaskToCommitToReduxStore));
         dispatch(updateTaskInFirestore(id, diffToCommitToFirestore));
+        dispatch(hideEditTask());
     };
 
 export const updateTaskCompletedness = (id, task, isComplete) => updateTask(id, {...task, isComplete});
