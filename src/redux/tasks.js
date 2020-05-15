@@ -192,8 +192,8 @@ export const deleteTaskInFirestore = (id) =>
 
 export const deleteTask = (id) =>
     (dispatch) => {
-        dispatch(deleteTaskInFirestore(id));
         dispatch(removeTask(id));
+        dispatch(deleteTaskInFirestore(id));
     };
 
 const isEditingTask = (id, state) => state.tasks.taskToEdit && id === state.tasks.taskToEdit.id;
