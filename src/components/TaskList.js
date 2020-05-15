@@ -1,49 +1,98 @@
 import Task from "./Task";
 import TaskEdit from "./TaskEdit";
+import * as util from "../util";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import dateFnsCompareAsc from "date-fns/compareAsc";
 import React from "react";
 import * as reactRedux from "react-redux";
+import dateFnsIsDate from "date-fns/isDate";
 
-const taskCompareFn = (key) => (a, b) => {
-    // This comparison could certainly be made type-specific and separated from
-    // anything that knows about tasks and keys but these comparisons
-    // (especially the isComplete boolean) are what make sense in the context of
-    // tasks. This doesn't aim to be a general comparison function.
-    const aVal = a[key];
-    const bVal = b[key];
+const compareWithEverythingBeforeUndefinedOrNull = (isOfType, compareFn) =>
+    (a, b) => {
+        if (a == undefined && b == undefined) {
+            return 0;
+        }
+        else if (a == undefined && b != undefined) {
+            return 1;
+        }
+        else if (a != undefined && b == undefined) {
+            return -1
+        }
+        else if (isOfType(a) && isOfType(b)) {
+            return compareFn(a, b);
+        }
+    };
 
+const keyToCompareFn = (key) => {
     switch (key) {
-        // Date comparison
+        // Date | undefined comparison
         case "createdDate":
         case "targetCompletionDate":
         case "completionDate":
-            return dateFnsCompareAsc(aVal, bVal);
+            return compareWithEverythingBeforeUndefinedOrNull(dateFnsIsDate, dateFnsCompareAsc);
 
-        // string comparison
+
+        // string | undefined comparison
         case "name":
         case "description":
-            return aVal.localeCompare(bVal);
+            return compareWithEverythingBeforeUndefinedOrNull(
+                util.isString,
+                (a, b) => a.localeCompare(b)
+            );
 
         // boolean comparison
         case "isComplete":
-            switch (true) {
-                case (!aVal && bVal):
-                    return 1;
-                case (aVal && !bVal):
-                    return -1;
-                default:
-                    return 0;
-            }
+            return compareWithEverythingBeforeUndefinedOrNull(
+                util.isBoolean,
+                (a, b) => {
+                    if (!a && b) {
+                        return 1;
+                    }
+                    else if (a && !b) {
+                        return -1;
+                    }
+                    else {
+                        return 0;
+                    }
+                });
     }
+}
+
+const taskCompareFn = ({key, direction}) => {
+    const sortKeys = [
+        key,
+        "name",
+        "description",
+        "createdDate"
+    ];
+
+    const withSortDirection = direction === "desc"
+                              ? (x) => -x
+                              : (x) => x;
+
+    const compareFns = Object.fromEntries(
+        sortKeys.map((k) => [k, keyToCompareFn(k)])
+    );
+
+    return (a, b) => {
+        for (const k of sortKeys) {
+            const result = compareFns[k](a[k], b[k]);
+            if (result !== 0) {
+                return withSortDirection(result);
+            }
+        }
+        return 0;
+    };
 };
 
-const taskList = ({tasksById, taskToEdit}) => (
-    <List>
+const taskList = ({tasksById, taskToEdit}) => {
+    const compareFn = taskCompareFn({key: "createdDate", direction: "asc"});
+
+    return <List>
         {
             Object.entries(tasksById)
-                  .sort(([aId, aTask], [bId, bTask]) => taskCompareFn("createdDate")(aTask, bTask))
+                  .sort(([aId, aTask], [bId, bTask]) => compareFn(aTask, bTask))
                   .map(([id, task]) =>
                       <ListItem
                           key={id}
@@ -58,8 +107,8 @@ const taskList = ({tasksById, taskToEdit}) => (
                       </ListItem>
                   )
         }
-    </List>
-);
+    </List>;
+};
 
 const TaskList = reactRedux.connect(
     (state) => ({

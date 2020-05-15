@@ -15,6 +15,8 @@ export const isDateInFuture = (date) =>
 // https://stackoverflow.com/a/9436948
 export const isString = (x) => (typeof x === "string" || x instanceof String);
 
+export const isBoolean = (x) => x === true || x === false;
+
 export const xformValues = (values, xforms) => {
     const result = {...values};
 
