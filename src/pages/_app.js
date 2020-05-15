@@ -85,7 +85,7 @@ const tasksChangesUnsubscribe = fbTasks.tasksCollection.onSnapshot(
                                 4)
                         );
 
-                        store.dispatch(tasks.upsertTask(change.doc.id, tasks.docTaskToTask(change.doc.data())));
+                        store.dispatch(tasks.receiveTaskAdditionFromFirestore(change.doc.id, change.doc.data()));
                     })();
 
                 case "modified":
@@ -99,8 +99,7 @@ const tasksChangesUnsubscribe = fbTasks.tasksCollection.onSnapshot(
                                 4)
                         );
 
-                        // TODO: Coalesce this into "added" above. Both are assocs/upserts.
-                        store.dispatch(tasks.upsertTask(change.doc.id, tasks.docTaskToTask(change.doc.data())));
+                        store.dispatch(tasks.receiveTaskModificationFromFirestore(change.doc.id, change.doc.data()));
                     })();
 
                 case "removed":
@@ -114,7 +113,7 @@ const tasksChangesUnsubscribe = fbTasks.tasksCollection.onSnapshot(
                                 4)
                         );
 
-                        store.dispatch(tasks.removeTask(change.doc.id));
+                        store.dispatch(tasks.receiveTaskDeletionFromFirestore(change.doc.id));
                     })();
             }
         })

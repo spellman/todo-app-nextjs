@@ -33,8 +33,9 @@ export const editTask = (id) => ({
 
 export const HIDE_EDIT_TASK = "HIDE_EDIT_TASK";
 
-export const hideEditTask = () => ({
-    type: HIDE_EDIT_TASK
+export const hideEditTask = (id) => ({
+    type: HIDE_EDIT_TASK,
+    id
 });
 
 
@@ -190,6 +191,57 @@ export const deleteTaskInFirestore = (id) =>
 export const deleteTask = (id) =>
     (dispatch) => {
         dispatch(deleteTaskInFirestore(id));
+        dispatch(removeTask(id));
+    };
+
+const isEditingTask = (id, state) => id === state.tasks.taskToEdit;
+
+const isChangeToTaskCompletednessOnly = (taskDiff) => {
+    const diffKeys = Object.keys(taskDiff);
+    console.log("taskDiff", taskDiff);
+    console.log("diffKeys", diffKeys);
+    console.log("diffKeys.length", diffKeys.length);
+    console.log("diffKeys[0]", diffKeys[0]);
+    console.log("isChangeToTaskCompletednessOnly", (diffKeys.length === 1 && diffKeys[0] === "isComplete"));
+    return (diffKeys.length === 1 && diffKeys[0] === "isComplete");
+};
+
+export const receiveTaskAdditionFromFirestore = (id, docTask) =>
+    (dispatch) => {
+        dispatch(upsertTask(id, docTaskToTask(docTask)));
+    };
+
+export const receiveTaskModificationFromFirestore = (id, docTask) =>
+    (dispatch, getState) => {
+        const modifiedTask = docTaskToTask(docTask);
+        const state = getState();
+        const existingTask = state.tasks.tasksById[id];
+
+        console.log("modified task", modifiedTask);
+        console.log("state", state);
+        console.log("existing task", existingTask);
+        console.log("task id:", id);
+        console.log("taskToEdit,", state.tasks.taskToEdit);
+        console.log("editing task?", isEditingTask(id, state));
+
+        if (isEditingTask(id, state)) {
+            if (isChangeToTaskCompletednessOnly(taskDiff(existingTask, modifiedTask))) {
+                dispatch(flash.taskCompletednessChangedExternally(id, modifiedTask.isComplete));
+            }
+            else {
+                dispatch(flash.taskChangedExternally(id));
+            }
+        }
+
+        dispatch(upsertTask(id, modifiedTask));
+    };
+
+export const receiveTaskDeletionFromFirestore = (id) =>
+    (dispatch, getState) => {
+        if (isEditingTask(id, getState())) {
+            dispatch(flash.taskDeletedExternally(id));
+        }
+
         dispatch(removeTask(id));
     };
 

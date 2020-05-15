@@ -1,22 +1,33 @@
 import * as tasks from "./tasks";
+import * as util from "../util";
+
+export const EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED = "EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED";
+
+export const isMessageForExternalChangeToTaskBeingEdited = (message) =>
+    message.type && (new Set(message.type.split("/")).has(EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED));
+
+export const isMessageForTask = (message, taskId) => message.taskId === taskId;
 
 const TASK_COMPLETEDNESS_CHANGED_EXTERNALLY = "TASK_COMPLETEDNESS_CHANGED_EXTERNALLY";
 
-export const taskCompletednessChangedExternally = (isComplete) => ({
+export const taskCompletednessChangedExternally = (taskId, isComplete) => ({
     type: TASK_COMPLETEDNESS_CHANGED_EXTERNALLY,
+    taskId,
     isComplete
 });
 
 const TASK_CHANGED_EXTERNALLY = "TASK_CHANGED_EXTERNALLY";
 
-export const taskChangedExternally = () => ({
-    type: TASK_CHANGED_EXTERNALLY
+export const taskChangedExternally = (taskId) => ({
+    type: TASK_CHANGED_EXTERNALLY,
+    taskId
 });
 
 const TASK_DELETED_EXTERNALLY = "TASK_DELETED_EXTERNALLY";
 
-export const taskDeletedExternally = () => ({
-    type: TASK_DELETED_EXTERNALLY
+export const taskDeletedExternally = (taskId) => ({
+    type: TASK_DELETED_EXTERNALLY,
+    taskId
 });
 
 const DISMISS_MESSAGE = "DISMISS_MESSAGE";
@@ -36,15 +47,17 @@ export const reducer = (state = initialState, action) => {
                 // represents complete or incomplete so let's show the most
                 // recent change immediately instead of letting each snackbar
                 // display for the autoHideDuration.
-                const messages = [...state];
-                while (messages[0] && messages[0].type === TASK_COMPLETEDNESS_CHANGED_EXTERNALLY) {
-                    messages.shift();
-                }
+                const otherMessages = util.dropWhile(
+                    (message) => message
+                                 && message.type === `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED}/${TASK_COMPLETEDNESS_CHANGED_EXTERNALLY}`
+                                 && isMessageForTask(message, action.taskId),
+                    state);
 
                 return [
-                    ...messages,
+                    ...otherMessages,
                     {
-                        type: TASK_COMPLETEDNESS_CHANGED_EXTERNALLY,
+                        type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED}/${TASK_COMPLETEDNESS_CHANGED_EXTERNALLY}`,
+                        taskId: action.id,
                         id: new Date(),
                         severity: "info",
                         title: `This task has been marked ${action.isComplete
@@ -59,13 +72,14 @@ export const reducer = (state = initialState, action) => {
             return [
                 ...state,
                 {
-                    type: TASK_CHANGED_EXTERNALLY,
+                    type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED}/${TASK_CHANGED_EXTERNALLY}`,
+                    taskId: action.id,
                     id: new Date(),
                     severity: "warning",
                     title: "This task has been changed. Updating will overwrite.",
                     actions: [
-                        {key: "noOp", buttonText: "Continue"},
-                        {key: "cancelEditing", buttonText: "Cancel", reduxAction: tasks.hideEditTask()}
+                        {key: "cancelEditing", buttonText: "Cancel", reduxAction: tasks.hideEditTask(action.id)},
+                        {key: "noOp", buttonText: "Continue"}
                     ]
                 }
             ];
@@ -74,19 +88,27 @@ export const reducer = (state = initialState, action) => {
             return [
                 ...state,
                 {
-                    type: TASK_DELETED_EXTERNALLY,
+                    type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED}/${TASK_DELETED_EXTERNALLY}`,
+                    taskId: action.id,
                     id: new Date(),
                     severity: "warning",
                     title: "This task has been deleted. Updating will also resurrect.",
                     actions: [
-                        {key: "noOp", buttonText: "Continue"},
-                        {key: "cancelEditing", buttonText: "Cancel", reduxAction: tasks.hideEditTask()}
+                        {key: "cancelEditing", buttonText: "Cancel", reduxAction: tasks.hideEditTask(action.id)},
+                        {key: "noOp", buttonText: "Continue"}
                     ]
                 }
             ]
 
         case DISMISS_MESSAGE:
             return state.slice(1);
+
+        case tasks.HIDE_EDIT_TASK:
+            return util.dropWhile(
+                (message) => message
+                             && isMessageForExternalChangeToTaskBeingEdited(message)
+                             && isMessageForTask(message, action.taskId),
+                state);
 
         default:
             return state;

@@ -70,3 +70,11 @@ export const timestampToDate = {
     pred: (v) => v instanceof firebase.firestore.Timestamp,
     xform: (obj, k, v) => {obj[k] = v.toDate();}
 };
+
+export const dropWhile = (pred, coll) => {
+    const newColl = [...coll];
+    while (pred(newColl[0])) {
+        newColl.shift();
+    }
+    return newColl;
+};
