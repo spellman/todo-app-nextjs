@@ -63,8 +63,8 @@ const taskList = ({tasksById, taskToEdit}) => (
 
 const TaskList = reactRedux.connect(
     (state) => ({
-        tasksById: state.tasksById,
-        taskToEdit: state.taskToEdit
+        tasksById: state.tasks.tasksById,
+        taskToEdit: state.tasks.taskToEdit
     })
 )(taskList);
 

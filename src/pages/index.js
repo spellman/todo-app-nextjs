@@ -1,3 +1,4 @@
+import Flash from "../components/Flash";
 import TaskAdd from "../components/TaskAdd";
 import TaskList from "../components/TaskList";
 import * as tasks from "../redux/tasks";
@@ -30,7 +31,7 @@ const ToggleShowAddTaskButton = ({dispatch, showAddTask}) => (
     </Button>
 );
 
-const homePage = ({dispatch, showAddTask}) => (
+const homePage = ({dispatch, showAddTask, flashMessages}) => (
     <React.Fragment>
         <AppBar>
             <Toolbar>
@@ -55,13 +56,17 @@ const homePage = ({dispatch, showAddTask}) => (
             </Box>
 
             <TaskList />
+
+            {0 < flashMessages.length &&
+             <Flash />}
         </Container>
     </React.Fragment>
 );
 
 const HomePage = reactRedux.connect(
     (state) => ({
-        showAddTask: state.showAddTask
+        showAddTask: state.tasks.showAddTask,
+        flashMessages: state.flashMessages
     }),
     (dispatch) => ({dispatch})
 )(homePage);

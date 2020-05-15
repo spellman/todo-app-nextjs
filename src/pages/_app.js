@@ -2,6 +2,7 @@
 import * as fbTasks from "../firebase/tasks";
 import * as middleware from "../redux/middleware";
 import * as tasks from "../redux/tasks";
+import * as flash from "../redux/flash";
 import theme from "../theme";
 import DateFnsUtils from "@date-io/date-fns";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -14,7 +15,10 @@ import * as redux from "redux";
 import * as reduxDevtools from "redux-devtools-extension";
 import thunkMiddleware from "redux-thunk";
 
-const rootReducer = tasks.reducer;
+const rootReducer = redux.combineReducers({
+    tasks: tasks.reducer,
+    flashMessages: flash.reducer
+});
 
 const middlewares = [
     middleware.logger,

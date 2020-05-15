@@ -1,3 +1,4 @@
+import * as flash from "./flash";
 import * as util from "../util";
 import dateFnsIsDate from "date-fns/isDate";
 import "../firebase/clientApp";
@@ -153,7 +154,7 @@ const taskDiff = (initial, final) => {
 
 export const updateTask = (id, updatedTask) =>
     (dispatch, getState) => {
-        const existingTask = getState().tasksById[id];
+        const existingTask = getState().tasks.tasksById[id];
         const diff = taskDiff(existingTask, updatedTask);
         const updatedTaskToCommitToReduxStore = {...updatedTask};
         const diffToCommitToFirestore = {...diff};
@@ -267,7 +268,10 @@ export const reducer = (state = initialState, action) => {
             return (() => {
                 const newTasksById = {...state.tasksById};
                 delete newTasksById[action.id];
-                return {...state, tasksById: newTasksById};
+                return {
+                    ...state,
+                    tasksById: newTasksById
+                };
             })();
 
         default:
