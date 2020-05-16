@@ -1,4 +1,5 @@
 import Flash from "../components/Flash";
+import NoTasksStarterInstructions from "../components/NoTasksStarterInstructions";
 import TaskAdd from "../components/TaskAdd";
 import TaskList from "../components/TaskList";
 import * as tasks from "../redux/tasks";
@@ -55,7 +56,9 @@ const homePage = ({dispatch, showAddTask, tasksPlusEditingTaskById, taskToEdit, 
                 {showAddTask && <TaskAdd />}
             </Box>
 
-            <TaskList tasksPlusEditingTaskById={tasksPlusEditingTaskById} taskToEdit={taskToEdit} />
+            {0 === Object.entries(tasksPlusEditingTaskById).length
+             ? <NoTasksStarterInstructions />
+             : <TaskList tasksPlusEditingTaskById={tasksPlusEditingTaskById} taskToEdit={taskToEdit} />}
 
             {0 < flashMessages.length &&
              <Flash dispatch={dispatch} flashMessage={flashMessages[0]} />}
