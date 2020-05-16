@@ -1,10 +1,10 @@
 import * as tasks from "./tasks";
 import * as util from "../util";
 
-export const EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED = "EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED";
+export const EXTERNAL_CHANGE_TO_TASK_BEING_EDITED = "EXTERNAL_CHANGE_TO_TASK_BEING_EDITED";
 
 export const isMessageForExternalChangeToTaskBeingEdited = (message) =>
-    message.type && (new Set(message.type.split("/")).has(EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED));
+    message.type && (new Set(message.type.split("/")).has(EXTERNAL_CHANGE_TO_TASK_BEING_EDITED));
 
 export const isMessageForTask = (message, taskId) => message.taskId === taskId;
 
@@ -49,14 +49,14 @@ export const reducer = (state = initialState, action) => {
                 // display for the autoHideDuration.
                 const otherMessages = util.dropWhile(
                     (message) => message
-                                 && message.type === `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED}/${TASK_COMPLETEDNESS_CHANGED_EXTERNALLY}`
+                                 && message.type === `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITED}/${TASK_COMPLETEDNESS_CHANGED_EXTERNALLY}`
                                  && isMessageForTask(message, action.taskId),
                     state);
 
                 return [
                     ...otherMessages,
                     {
-                        type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED}/${TASK_COMPLETEDNESS_CHANGED_EXTERNALLY}`,
+                        type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITED}/${TASK_COMPLETEDNESS_CHANGED_EXTERNALLY}`,
                         taskId: action.taskId,
                         // TODO: Use a time provider so that you can test easily.
                         id: new Date(),
@@ -73,7 +73,7 @@ export const reducer = (state = initialState, action) => {
             return [
                 ...state,
                 {
-                    type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED}/${TASK_CHANGED_EXTERNALLY}`,
+                    type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITED}/${TASK_CHANGED_EXTERNALLY}`,
                     taskId: action.taskId,
                     // TODO: Use a time provider so that you can test easily.
                     id: new Date(),
@@ -90,7 +90,7 @@ export const reducer = (state = initialState, action) => {
             return [
                 ...state,
                 {
-                    type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED}/${TASK_DELETED_EXTERNALLY}`,
+                    type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITED}/${TASK_DELETED_EXTERNALLY}`,
                     taskId: action.taskId,
                     // TODO: Use a time provider so that you can test easily.
                     id: new Date(),
