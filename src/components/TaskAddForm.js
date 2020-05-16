@@ -85,7 +85,7 @@ const taskAddForm = ({createTask}) => (
                             format="MM-dd-yyyy"
                             disableFuture
                             aria-valuemax={dateFnsFormat(new Date(), "MM-dd-yyyy")}
-                            maxDateMessage={"A task can't be completed in the future. Must be " + dateFnsFormat(new Date(), "MM-dd-yyyy") + " or earlier."}
+                            maxDateMessage={`A task can't be completed in the future. Must be ${dateFnsFormat(new Date(), "MM-dd-yyyy")} or earlier.`}
                             autoOk
                             clearable
                             inputVariant="filled"

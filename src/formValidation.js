@@ -34,10 +34,7 @@ export const task = (values) => {
         errors.completionDate = "Optional but must be a date if given.";
     }
     else if (values.completionDate != null && util.isDateInFuture(values.completionDate)) {
-        const msg = "A task can't be completed in the future. Must be "
-                    + dateFnsFormat(new Date(), "MM-dd-yyyy")
-                    + " or earlier.";
-        errors.completionDate = msg;
+        errors.completionDate = `A task can't be completed in the future. Must be ${dateFnsFormat(new Date(), "MM-dd-yyyy")} or earlier.`;
     }
 
     console.log("errors", errors);
