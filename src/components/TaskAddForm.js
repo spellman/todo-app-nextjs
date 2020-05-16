@@ -31,7 +31,7 @@ const taskAddForm = ({createTask}) => (
             resetForm();
         }}
     >
-        {({submitForm, isSubmitting}) =>(
+        {({dirty, submitForm, isSubmitting}) =>(
             <formik.Form
                 autoComplete="off"
                 style={{width: "100%"}}
@@ -113,7 +113,7 @@ const taskAddForm = ({createTask}) => (
                             <Box pt={1} pb={2}>
                                 <Button
                                     onClick={submitForm}
-                                    disabled={isSubmitting}
+                                    disabled={!dirty || isSubmitting}
                                     color="primary"
                                     variant="contained"
                                 >

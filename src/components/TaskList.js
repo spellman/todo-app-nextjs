@@ -100,7 +100,7 @@ const taskList = ({tasksPlusEditingTaskById, taskToEdit}) => {
                    >
                        {
                            taskToEdit && id === taskToEdit.id
-                           ? <TaskEdit id={taskToEdit.id} task={taskToEdit.task} />
+                           ? <TaskEdit taskToEdit={taskToEdit} />
                            : <Task id={id} task={task} />
                        }
                    </ListItem>

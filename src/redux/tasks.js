@@ -41,6 +41,15 @@ export const cancelEditTask = (id) => ({
 
 
 
+export const MARK_TASK_BEING_EDITTED_AS_DELETED = "MARK_TASK_BEING_EDITTED_AS_DELETED";
+
+export const markTaskBeingEdittedAsDeleted = (id) => ({
+    type: MARK_TASK_BEING_EDITTED_AS_DELETED,
+    id
+});
+
+
+
 export const UPSERT_TASK = "UPSERT_TASK";
 
 export const upsertTask = (id, task) => ({
@@ -242,6 +251,7 @@ export const receiveTaskModificationFromFirestore = (id, docTask) =>
 export const receiveTaskDeletionFromFirestore = (id) =>
     (dispatch, getState) => {
         if (isEditingTask(id, getState())) {
+            dispatch(markTaskBeingEdittedAsDeleted(id));
             dispatch(flash.taskDeletedExternally(id));
         }
 
@@ -312,6 +322,17 @@ export const reducer = (state = initialState, action) => {
                 ...state,
                 taskToEdit: null
             };
+
+        case MARK_TASK_BEING_EDITTED_AS_DELETED:
+            return state.taskToEdit
+                   ? {
+                    ...state,
+                    taskToEdit: {
+                        ...state.taskToEdit,
+                        isDeleted: true
+                    }
+                }
+                   : state;
 
         case UPSERT_TASK:
             return {

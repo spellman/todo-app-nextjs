@@ -10,7 +10,7 @@ import * as formikMUI from "formik-material-ui";
 import * as formikMUIPickers from "formik-material-ui-pickers";
 import React from "react";
 
-const TaskEditForm = ({dispatch, id, task}) => (
+const TaskEditForm = ({dispatch, taskToEdit: {id, task, isDeleted}}) => (
     <formik.Formik
         initialValues={{
             name: task.name,
@@ -32,7 +32,7 @@ const TaskEditForm = ({dispatch, id, task}) => (
             dispatch(tasks.updateTask(id, task, tasks.taskDiff(task, xformedValues, keysToDiff)));
         }}
     >
-        {({submitForm, isSubmitting}) =>(
+        {({dirty, submitForm, isSubmitting}) =>(
             <formik.Form
                 autoComplete="off"
                 style={{flex: 1}}
@@ -114,7 +114,7 @@ const TaskEditForm = ({dispatch, id, task}) => (
                             <Box pt={1} pb={1}>
                                 <Button
                                     onClick={submitForm}
-                                    disabled={isSubmitting}
+                                    disabled={(!isDeleted && !dirty) || isSubmitting}
                                     color="primary"
                                     variant="contained">
                                     Update Task
