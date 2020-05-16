@@ -34,6 +34,7 @@ const TaskEditForm = ({dispatch, taskToEdit: {id, task, isDeleted}}) => (
     >
         {({dirty, submitForm, isSubmitting}) =>(
             <formik.Form
+                aria-label="form to edit task"
                 autoComplete="off"
                 style={{flex: 1}}
             >

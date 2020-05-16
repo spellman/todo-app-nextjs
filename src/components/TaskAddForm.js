@@ -33,6 +33,7 @@ const taskAddForm = ({createTask}) => (
     >
         {({dirty, submitForm, isSubmitting}) =>(
             <formik.Form
+                aria-label="form to create new task"
                 autoComplete="off"
                 style={{width: "100%"}}
             >

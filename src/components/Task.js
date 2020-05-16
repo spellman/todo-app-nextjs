@@ -49,6 +49,7 @@ const task = ({dispatch, id, task}) => (
                         secondary={
                             <React.Fragment>
                                 <Typography
+                                    aria-label="task description"
                                     component="span"
                                     variant="body2"
                                     display="block"
