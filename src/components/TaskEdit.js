@@ -15,10 +15,16 @@ const taskEdit = ({dispatch, taskToEdit}) => (
         style={{flex: "1 0 100%"}}
     >
         <Box marginLeft={7}>
-            <TaskEditForm dispatch={dispatch} taskToEdit={taskToEdit} />
+            <TaskEditForm
+                dispatch={dispatch}
+                taskToEdit={taskToEdit}
+            />
         </Box>
         <Grid item>
-            <DeleteIconButton color="error" deleteFn={() => {dispatch(tasks.deleteTask(taskToEdit.id));}} />
+            <DeleteIconButton
+                color="error"
+                deleteFn={() => {dispatch(tasks.deleteTask(taskToEdit.id));}}
+            />
         </Grid>
     </Grid>
 );

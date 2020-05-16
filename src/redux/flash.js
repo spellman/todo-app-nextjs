@@ -80,8 +80,15 @@ export const reducer = (state = initialState, action) => {
                     severity: "warning",
                     title: "This task has been changed. Updating will overwrite.",
                     actions: [
-                        {key: "cancelEditing", buttonText: "Cancel", reduxAction: tasks.cancelEditTask(action.id)},
-                        {key: "noOp", buttonText: "Continue"}
+                        {
+                            key: "cancelEditing",
+                            buttonText: "Cancel",
+                            reduxAction: tasks.cancelEditTask(action.id)
+                        },
+                        {
+                            key: "noOp",
+                            buttonText: "Continue"
+                        }
                     ]
                 }
             ];
@@ -97,8 +104,15 @@ export const reducer = (state = initialState, action) => {
                     severity: "warning",
                     title: "This task has been deleted but you still have the information here, in this browser tab. Cancel editing to accept deletion or continue editing to create a new task from this information.",
                     actions: [
-                        {key: "cancelEditing", buttonText: "Cancel", reduxAction: tasks.cancelEditTask(action.id)},
-                        {key: "noOp", buttonText: "Continue"}
+                        {
+                            key: "cancelEditing",
+                            buttonText: "Cancel",
+                            reduxAction: tasks.cancelEditTask(action.id)
+                        },
+                        {
+                            key: "noOp",
+                            buttonText: "Continue"
+                        }
                     ]
                 }
             ]

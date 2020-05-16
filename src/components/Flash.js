@@ -14,6 +14,7 @@ const Flash = ({dispatch, flashMessage}) => {
             if (typeof fn === "function") {fn();}
             dispatch(reduxFlash.dismissMessage());
         };
+
     const alertAction = <React.Fragment>
         {Array.isArray(flashMessage.actions)
          ? flashMessage.actions.map(({key, buttonText, reduxAction}) =>
