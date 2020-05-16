@@ -260,34 +260,6 @@ export const receiveTaskDeletionFromFirestore = (id) =>
 
 
 
-const exampleState = {
-    showAddTask: false,
-    tasksById: {
-        "QpafsQGA9G7EK69my8gl": {
-            "createdDate": new Date(2020, 5, 7, 12, 0, 0, 0),
-            "name": "test name",
-            "description": "test description",
-            "targetCompletionDate": new Date(2020, 5, 8, 12, 0, 0, 0),
-            "isComplete": false
-        },
-        "lBTUUgsarb1Pzjsc35hY": {
-            "createdDate": new Date(2020, 5, 8, 12, 0, 0, 0),
-            "name": "super fun thing!",
-            "description": "like this!",
-            "targetCompletionDate": new Date(2020, 5, 8, 13, 0, 0, 0),
-            "isComplete": false
-        },
-        "m1KipbmuM64JvgG4tdTv": {
-            "createdDate": new Date(2020, 5, 8, 13, 0, 0, 0),
-            "name": "race",
-            "description": "Mario Kart Wii CTGP",
-            "targetCompletionDate": new Date(2020, 5, 9, 12, 0, 0, 0),
-            "isComplete": false
-        }
-    },
-    taskToEdit: null
-};
-
 const initialState = {
     showAddTask: false,
     tasksById: {},
