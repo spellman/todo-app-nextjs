@@ -31,7 +31,7 @@ const ToggleShowAddTaskButton = ({dispatch, showAddTask}) => (
     </Button>
 );
 
-const homePage = ({dispatch, showAddTask, flashMessages}) => (
+const homePage = ({dispatch, showAddTask, tasksPlusEditingTaskById, taskToEdit, flashMessages}) => (
     <React.Fragment>
         <AppBar>
             <Toolbar>
@@ -55,7 +55,7 @@ const homePage = ({dispatch, showAddTask, flashMessages}) => (
                 {showAddTask && <TaskAdd />}
             </Box>
 
-            <TaskList />
+            <TaskList tasksPlusEditingTaskById={tasksPlusEditingTaskById} taskToEdit={taskToEdit} />
 
             {0 < flashMessages.length &&
              <Flash dispatch={dispatch} flashMessage={flashMessages[0]} />}
@@ -64,10 +64,23 @@ const homePage = ({dispatch, showAddTask, flashMessages}) => (
 );
 
 const HomePage = reactRedux.connect(
-    (state) => ({
-        showAddTask: state.tasks.showAddTask,
-        flashMessages: state.flashMessages
-    }),
+    (state) => {
+        // We want to re-render the taskList if tasks change UNLESS we are
+        // editing that task.
+        // During editing, the task is not displayed and we don't want the form
+        // to re-render if the task is changed by another client.
+        const taskToEdit = state.tasks.taskToEdit;
+        const tasksPlusEditingTaskById = taskToEdit == null
+                                         ? state.tasks.tasksById
+                                         : {...state.tasks.tasksById, [taskToEdit.id]: taskToEdit.task};
+
+        return {
+            showAddTask: state.tasks.showAddTask,
+            tasksPlusEditingTaskById: tasksPlusEditingTaskById,
+            taskToEdit: taskToEdit,
+            flashMessages: state.flashMessages
+        };
+    },
     (dispatch) => ({dispatch})
 )(homePage);
 

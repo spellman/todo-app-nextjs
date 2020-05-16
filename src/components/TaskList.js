@@ -4,9 +4,8 @@ import * as util from "../util";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import dateFnsCompareAsc from "date-fns/compareAsc";
-import React from "react";
-import * as reactRedux from "react-redux";
 import dateFnsIsDate from "date-fns/isDate";
+import React from "react";
 
 const compareWithEverythingBeforeUndefinedOrNull = (isOfType, compareFn) =>
     (a, b) => {
@@ -86,7 +85,7 @@ const taskCompareFn = ({key, direction}) => {
     };
 };
 
-const taskList = ({tasksPlusEditingTaskById, taskToEdit}) => {
+const TaskList = ({tasksPlusEditingTaskById, taskToEdit}) => {
     const compareFn = taskCompareFn({key: "createdDate", direction: "asc"});
 
     return <List>
@@ -107,22 +106,5 @@ const taskList = ({tasksPlusEditingTaskById, taskToEdit}) => {
                )}
     </List>;
 };
-
-const TaskList = reactRedux.connect(
-    (state) => {
-        // We want to re-render the taskList if tasks change UNLESS we are
-        // editing that task.
-        // During editing, the task is not displayed and we don't want the form
-        // to re-render if the task is changed by another client.
-        const tasksPlusEditingTaskById = state.tasks.taskToEdit == null
-            ? state.tasks.tasksById
-            : {...state.tasks.tasksById, [state.tasks.taskToEdit.id]: state.tasks.taskToEdit.task};
-
-        return {
-            tasksPlusEditingTaskById: tasksPlusEditingTaskById,
-            taskToEdit: state.tasks.taskToEdit
-        };
-    }
-)(taskList);
 
 export default TaskList;
