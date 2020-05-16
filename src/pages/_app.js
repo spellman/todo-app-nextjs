@@ -29,40 +29,6 @@ const middlewareEnhancer = redux.applyMiddleware(...middlewares);
 const enhancer = reduxDevtools.composeWithDevTools(middlewareEnhancer);
 
 const store = redux.createStore(rootReducer, undefined, enhancer);
-// console.log(store.getState());
-// const unsubscribe = store.subscribe(() => {console.log(store.getState());});
-//
-// store.dispatch(tasks.createTask({
-//     name: "A whole new task!",
-//     description: "A new, fantastic point of view",
-//     targetCompletionDate: new Date(2020, 5, 9, 8, 7, 6, 5),
-//     isComplete: false
-// }));
-// store.dispatch(tasks.createTask({
-//     name: "You likey the tasks, eh?",
-//     description: "Sí, señor.",
-//     targetCompletionDate: new Date(2020, 5, 9, 8, 7, 20, 123),
-//     isComplete: false
-// }));
-// store.dispatch(tasks.updateTaskFromTaskChanges("QpafsQGA9G7EK69my8gl", {name: "A new, grand name!!!"}));
-// store.dispatch(tasks.updateTaskFromTaskChanges("lBTUUgsarb1Pzjsc35hY",
-//     {
-//         isComplete: true,
-//         completionDate: new Date(2020, 5, 7)
-//     }));
-// unsubscribe();
-
-// tasksCollection.doc("TEST_WRITE").set({
-//     name: "fail name",
-//     description: "fail description",
-//     targetCompletionDate: firebase.firestore.Timestamp.now(),
-//     isComplete: false
-// }).then(() => {
-//     console.log("done wrote that doc");
-// }).catch((error) => {
-//     console.log("no did done be write that doc:", error);
-// })
-//
 
 // Since this is a single-screen app, there is no need to begin listening when a
 // component is mounted and stop listening when it is unmounted; the app should
