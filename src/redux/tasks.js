@@ -80,8 +80,6 @@ export const docTaskToTask = (docTask) =>
 
 export const createTaskInFirestore = (id, task) =>
     (dispatch, getState, tasksCollection) => {
-        console.log("createTaskInFirestore task:", task);
-        console.log("createTaskInFirestore taskDoc:", taskToDocTask(task));
         return tasksCollection.doc(id)
                               .set(taskToDocTask(task))
                               .then(() => console.log("create task success:", id, "task:", task, "doc task:", taskToDocTask(task)))
@@ -90,7 +88,6 @@ export const createTaskInFirestore = (id, task) =>
 
 export const createTask = (makeId, task) =>
     (dispatch) => {
-        console.log("createTask task:", task);
         const id = makeId();
         // TODO: Use a time provider so that you can test easily.
         const augmentedTask = {...task, createdDate: new Date(), isComplete: dateFnsIsDate(task.completionDate)};
@@ -102,8 +99,6 @@ export const createTask = (makeId, task) =>
 
 export const updateTaskInFirestore = (id, taskDiff, updatedTask) =>
     (dispatch, getState, tasksCollection) => {
-        console.log("updateTaskInFirestore task:", taskDiff);
-        console.log("updateTaskInFirestore taskDoc:", taskToDocTask(taskDiff));
         return tasksCollection.doc(id)
                               .update(taskToDocTask(taskDiff))
                               .then(() => console.log("update task success:", id, "taskDiff:", taskDiff, "doc task:", taskToDocTask(taskDiff)))
@@ -130,10 +125,6 @@ export const taskDiff = (initial, final, keysToDiff) => {
     // of a task. (Not necessarily the same subsets.)
     // NOTE: This is NOT a general or recursive diff function.
     keysToDiff = keysToDiff || [...setUnion(Object.keys(initial), Object.keys(final)).values()];
-
-    console.log("keysToDiff", keysToDiff);
-    console.log("initial", initial);
-    console.log("final", final);
 
     return keysToDiff.reduce(
         (taskDiffAcc, k) => {
@@ -210,11 +201,6 @@ export const deleteTask = (id) =>
 
 const isChangeToTaskCompletednessOnly = (taskDiff) => {
     const diffKeys = Object.keys(taskDiff);
-    console.log("taskDiff", taskDiff);
-    console.log("diffKeys", diffKeys);
-    console.log("diffKeys.length", diffKeys.length);
-    console.log("diffKeys[0]", diffKeys[0]);
-    console.log("isChangeToTaskCompletednessOnly", (diffKeys.length === 1 && diffKeys[0] === "isComplete"));
     return (diffKeys.length === 1 && diffKeys[0] === "isComplete");
 };
 
@@ -228,13 +214,6 @@ export const receiveTaskModificationFromFirestore = (id, docTask) =>
         const modifiedTask = docTaskToTask(docTask);
         const state = getState();
         const existingTask = state.tasks.tasksById[id];
-
-        console.log("modified task", modifiedTask);
-        console.log("state", state);
-        console.log("existing task", existingTask);
-        console.log("task id:", id);
-        console.log("taskToEdit,", state.tasks.taskToEdit);
-        console.log("editing task?", isEditingTask(id, state));
 
         if (isEditingTask(id, state)) {
             if (isChangeToTaskCompletednessOnly(taskDiff(existingTask, modifiedTask))) {

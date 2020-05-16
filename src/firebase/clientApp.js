@@ -15,19 +15,8 @@ const clientCredentials = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID
 }
 
-console.log("About to initialize firebase app")
-
 if (firebase.apps.length === 0) {
   firebase.initializeApp(clientCredentials);
 }
-
-// Check that `window` is in scope for the analytics module!
-if (typeof window !== 'undefined' && !firebase.apps.length) {
-  // firebase.initializeApp(clientCredentials)
-  // To enable analytics. https://firebase.google.com/docs/analytics/get-started
-  // if ('measurementId' in clientCredentials) firebase.analytics()
-}
-
-console.log("Initialized firebase app")
 
 export const db = firebase.firestore();

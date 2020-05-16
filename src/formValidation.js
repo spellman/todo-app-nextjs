@@ -8,8 +8,6 @@ import dateFnsIsDate from "date-fns/isDate";
 import dateFnsFormat from "date-fns/format";
 
 export const task = (values) => {
-    console.log("values", values);
-
     const errors = {};
 
     if (values.name == null) {
@@ -36,8 +34,6 @@ export const task = (values) => {
     else if (values.completionDate != null && util.isDateInFuture(values.completionDate)) {
         errors.completionDate = `A task can't be completed in the future. Must be ${dateFnsFormat(new Date(), "MM-dd-yyyy")} or earlier.`;
     }
-
-    console.log("errors", errors);
 
     return errors;
 };

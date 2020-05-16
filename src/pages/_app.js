@@ -21,7 +21,7 @@ const rootReducer = redux.combineReducers({
 });
 
 const middlewares = [
-    middleware.logger,
+    // middleware.logger,
     thunkMiddleware.withExtraArgument(fbTasks.tasksCollection)
 ];
 const middlewareEnhancer = redux.applyMiddleware(...middlewares);
@@ -75,43 +75,16 @@ const tasksChangesUnsubscribe = fbTasks.tasksCollection.onSnapshot(
             switch (change.type) {
                 case "added":
                     return (() => {
-                        console.log(
-                            "ADDED\n",
-                            change,
-                            JSON.stringify(
-                                {id: change.doc.id, data: change.doc.data()},
-                                undefined,
-                                4)
-                        );
-
                         store.dispatch(tasks.receiveTaskAdditionFromFirestore(change.doc.id, change.doc.data()));
                     })();
 
                 case "modified":
                     return (() => {
-                        console.log(
-                            "MODIFIED\n",
-                            change,
-                            JSON.stringify(
-                                {id: change.doc.id, data: change.doc.data()},
-                                undefined,
-                                4)
-                        );
-
                         store.dispatch(tasks.receiveTaskModificationFromFirestore(change.doc.id, change.doc.data()));
                     })();
 
                 case "removed":
                     return (() => {
-                        console.log(
-                            "REMOVED\n",
-                            change,
-                            JSON.stringify(
-                                {id: change.doc.id, data: change.doc.data()},
-                                undefined,
-                                4)
-                        );
-
                         store.dispatch(tasks.receiveTaskDeletionFromFirestore(change.doc.id));
                     })();
             }
