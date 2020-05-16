@@ -57,7 +57,7 @@ export const reducer = (state = initialState, action) => {
                     ...otherMessages,
                     {
                         type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED}/${TASK_COMPLETEDNESS_CHANGED_EXTERNALLY}`,
-                        taskId: action.id,
+                        taskId: action.taskId,
                         // TODO: Use a time provider so that you can test easily.
                         id: new Date(),
                         severity: "info",
@@ -74,7 +74,7 @@ export const reducer = (state = initialState, action) => {
                 ...state,
                 {
                     type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED}/${TASK_CHANGED_EXTERNALLY}`,
-                    taskId: action.id,
+                    taskId: action.taskId,
                     // TODO: Use a time provider so that you can test easily.
                     id: new Date(),
                     severity: "warning",
@@ -91,7 +91,7 @@ export const reducer = (state = initialState, action) => {
                 ...state,
                 {
                     type: `${EXTERNAL_CHANGE_TO_TASK_BEING_EDITTED}/${TASK_DELETED_EXTERNALLY}`,
-                    taskId: action.id,
+                    taskId: action.taskId,
                     // TODO: Use a time provider so that you can test easily.
                     id: new Date(),
                     severity: "warning",
