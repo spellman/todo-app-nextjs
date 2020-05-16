@@ -39,7 +39,7 @@ export const xformValues = (values, xforms) => {
 }
 
 export const removeUndefined = {
-    pred: (v) => v == undefined,
+    pred: (v) => v == null,
     xform: (obj, k, v) => {delete obj[k];}
 };
 
@@ -59,7 +59,7 @@ export const truncateDateToDay = {
 };
 
 export const undefinedToDeletionMarker = {
-    pred: (v) => v == undefined,
+    pred: (v) => v == null,
     xform: (obj, k, v) => {obj[k] = firebase.firestore.FieldValue.delete();}
 };
 

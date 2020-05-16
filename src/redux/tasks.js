@@ -140,16 +140,16 @@ export const taskDiff = (initial, final, keysToDiff) => {
             const initial_v = initial[k];
             const final_v = final[k];
 
-            if (initial_v == undefined && final_v == undefined) {
+            if (initial_v == null && final_v == null) {
                 return taskDiffAcc;
             }
-            else if (initial_v == undefined && final_v != undefined) {
+            else if (initial_v == null && final_v != null) {
                 return {...taskDiffAcc, [k]: final_v};
             }
-            else if (initial_v != undefined && final_v == undefined) {
+            else if (initial_v != null && final_v == null) {
                 return {...taskDiffAcc, [k]: firebase.firestore.FieldValue.delete()};
             }
-            else if (initial_v != undefined && final_v != undefined) {
+            else if (initial_v != null && final_v != null) {
                 if (dateFnsIsDate(initial_v)
                     && dateFnsIsDate(final_v)
                     && dateFnsIsEqual(initial_v, final_v)) {

@@ -22,7 +22,7 @@ const Flash = ({dispatch, flashMessage}) => {
                     color="inherit"
                     onClick={handleClose(
                         () => {
-                            if (reduxAction != undefined) {
+                            if (reduxAction != null) {
                                 dispatch(reduxAction);
                             }
                         }

@@ -12,7 +12,7 @@ export const task = (values) => {
 
     const errors = {};
 
-    if (values.name == undefined) {
+    if (values.name == null) {
         errors.name = "Required";
     }
     else if (!util.isString(values.name)) {
@@ -22,18 +22,18 @@ export const task = (values) => {
         errors.name = "Required";
     }
 
-    if (values.description != undefined && !util.isString(values.description)) {
+    if (values.description != null && !util.isString(values.description)) {
         errors.description = "Optional but must be a string if given.";
     }
 
-    if (values.targetCompletionDate != undefined && !dateFnsIsDate(values.targetCompletionDate)) {
+    if (values.targetCompletionDate != null && !dateFnsIsDate(values.targetCompletionDate)) {
         errors.targetCompletionDate = "Optional but must be a date if given.";
     }
 
-    if (values.completionDate != undefined && !dateFnsIsDate(values.completionDate)) {
+    if (values.completionDate != null && !dateFnsIsDate(values.completionDate)) {
         errors.completionDate = "Optional but must be a date if given.";
     }
-    else if (values.completionDate != undefined && util.isDateInFuture(values.completionDate)) {
+    else if (values.completionDate != null && util.isDateInFuture(values.completionDate)) {
         const msg = "A task can't be completed in the future. Must be "
                     + dateFnsFormat(new Date(), "MM-dd-yyyy")
                     + " or earlier.";

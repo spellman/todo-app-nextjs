@@ -9,13 +9,13 @@ import React from "react";
 
 const compareWithEverythingBeforeUndefinedOrNull = (isOfType, compareFn) =>
     (a, b) => {
-        if (a == undefined && b == undefined) {
+        if (a == null && b == null) {
             return 0;
         }
-        else if (a == undefined && b != undefined) {
+        else if (a == null && b != null) {
             return 1;
         }
-        else if (a != undefined && b == undefined) {
+        else if (a != null && b == null) {
             return -1
         }
         else if (isOfType(a) && isOfType(b)) {
