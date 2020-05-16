@@ -190,13 +190,14 @@ export const deleteTaskInFirestore = (id) =>
                        .then(() => console.log("delete task success:", id))
                        .catch((error) => console.log("delete task failure:", id, "\nerror:", error));
 
+const isEditingTask = (id, state) => state.tasks.taskToEdit && id === state.tasks.taskToEdit.id;
+
 export const deleteTask = (id) =>
     (dispatch) => {
+        dispatch(cancelEditTask(id));
         dispatch(removeTask(id));
         dispatch(deleteTaskInFirestore(id));
     };
-
-const isEditingTask = (id, state) => state.tasks.taskToEdit && id === state.tasks.taskToEdit.id;
 
 const isChangeToTaskCompletednessOnly = (taskDiff) => {
     const diffKeys = Object.keys(taskDiff);
