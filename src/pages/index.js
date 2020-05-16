@@ -35,20 +35,22 @@ const ToggleShowAddTaskButton = ({dispatch, showAddTask}) => (
 const homePage = ({dispatch, showAddTask, tasksPlusEditingTaskById, taskToEdit, flashMessages}) => (
     <React.Fragment>
         <AppBar>
-            <Toolbar>
-                <Typography
-                    component="h1"
-                    variant="h5"
-                    style={{flex: 1}}
-                >
-                    Tasks
-                </Typography>
+            <Container>
+                <Toolbar>
+                    <Typography
+                        component="h1"
+                        variant="h5"
+                        style={{flex: 1}}
+                    >
+                        Tasks
+                    </Typography>
 
-                <ToggleShowAddTaskButton
-                    dispatch={dispatch}
-                    showAddTask={showAddTask}
-                />
-            </Toolbar>
+                    <ToggleShowAddTaskButton
+                        dispatch={dispatch}
+                        showAddTask={showAddTask}
+                    />
+                </Toolbar>
+            </Container>
         </AppBar>
 
         <Container>
