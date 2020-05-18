@@ -1,57 +1,40 @@
-# With Firebase
+# Todo App
 
-This is a simple set up for Firebase for client side applications.
+https://todo-app-nextjs.now.sh/
 
-The firebase app is initialized in `firebase/clientApp.js`, to use you just have to import it anywhere in the app
+This is a todo-list application with basic functionality and sync across devices and browser tabs, built with
+* React (https://reactjs.org)
+* Redux (https://redux.js.org)
+* Next.js (https://nextjs.org)
+* Cloud Firestore database (https://firebase.google.com/docs/firestore)
+* Material-UI (https://material-ui.com)
+* Formik forms library (https://github.com/jaredpalmer/formik)
 
-The React Context API is used to provide user state.
+and deployed on Vercel (https://vercel.com).
 
-## Deploy your own
+The part I like most is the very-fast sync across devices and the handling of external changes to a task that a user is currently editing.
 
-Deploy the example using [Vercel](https://vercel.com):
+I normally program in Clojure\[Script\] so I used React and Redux to practice JavaScript with some mainstream tools. In keeping with making a static site for Vercel, I used React through Next.js. This is an interesting approach and seems to make a lot of sense &mdash; delivering a skeleton / template or truly static page through a CDN is fast and good for SEO.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/zeit/next.js/tree/canary/examples/with-firebase)
+I considered Crux (https://opencrux.com) and Fauna (https://fauna.com) for their accrete-only data models but I would have had to have put together my own publish-subscribe (likely with [AWS AppSync](https://aws.amazon.com/appsync/). Firebase Cloud Firestore updates data in place, but it's made for publish-subscribe and so was a pragmatic choice for this exploratory project.
 
-## How to use
+* The app displays instructions when there are no tasks in the list.
+* The "ADD TASK" button in the top right corner brings up a form to add a task.
+* Task name is required; description, target completion date, and actual completion date are optional.
+* Dates can be typed in or selected from a date-picker.
+* Click an existing task to edit it.
+* Click the checkbox to the left of a task to toggle it complete or incomplete.
+    * When a completion date is added to a task, then the task is also toggled complete.
+    * When a task is toggled incomplete, then the completion date is cleared if the task had a completion date.
+    * I opted not to add a default completion date when toggling a task complete. It's not necessarily the case that it was just completed (the most likely default) so I don't want to add incorrect information. I also may know that a task is complete but not know or care what day it was completed.
+        * I suppose I could have added a button to indicate that a task was just completed or I could have temporarily displayed a date-picker when a task is toggled complete.
+* Click the trash can icon to the right of a task to delete the task.
+* When a user is not editing a task, they can see the results of external updates made to tasks.
+* When a user is editing a task, I opted to provide a stable view of the task and not update the edit form to reflect external changes. Rather, I inform the user of the changes with a flash message and let them decide what to do:
+    * If the task is toggled complete or incomplete, then the user is informed via a flash message that auto-dismisses after 5 seconds. If the task is again toggled before the existing toggle-notification has dismissed, then the existing notification is immediately replaced with the new notification with the current toggle state.
+    * If the name, description, target completion date, or actual completion date of the task is edited, then user is informed via a flash message that does not auto dismiss. The user can choose to either continue editing and to overwite the external changes or to cancel editing and view the changes.
+        * On sufficiently large screens, it would be nice to show the changed task or a diff of the changed task against the current form data. I didn't get that far yet.
+    * If the task is deleted, then the user is informed via a flash message that does not auto dismiss. The user can choose to either continue editing (and create a new task with the information) or to cancel editing and accept the deletion.
+* I opted to make the app as easy to access and use as possible. Although Firebase makes auth and user accounts easy, I chose not to use them. Everyone interacts with the same task last. It's a demo :)
 
-### Using `create-next-app`
-
-Execute [`create-next-app`](https://github.com/zeit/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
-
-```bash
-npx create-next-app --example with-firebase with-firebase-app
-# or
-yarn create next-app --example with-firebase with-firebase-app
-```
-
-### Download manually
-
-Download the example:
-
-```bash
-curl https://codeload.github.com/zeit/next.js/tar.gz/canary | tar -xz --strip=2 next.js-canary/examples/with-firebase
-cd with-firebase
-```
-
-### Configuration
-
-1. [Create a Firebase project](https://console.firebase.google.com/u/0/) and add a new app to it.
-2. Create a `.env` file and copy the contents of `.env.example` into it:
-
-```bash
-cp .env.example .env
-```
-
-3. Set each variable on `.env` with your Firebase Configuration (found in "Project settings").
-
-Install it and run:
-
-```bash
-npm install
-npm run dev
-# or
-yarn
-yarn dev
-```
-
-Deploy it to the cloud with [Vercel](https://vercel.com/import?filter=next.js&utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+Note: I know the standard Redux organizational pattern (which we use in our legacy JavaScript at [Roomkey](https://www.roomkey.com)) is to separate action types, action creators, and reducers into separate files. I like that [Elm](https://elm-lang.org), [Fulcro](https://fulcro.fulcrologic.com), and often [re-frame](http://day8.github.io/re-frame/) co-locate those things / their equivalents, though, so I co-located them in this project.
