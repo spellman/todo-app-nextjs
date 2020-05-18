@@ -159,7 +159,7 @@ export const taskDiff = (initial, final, keysToDiff) => {
 };
 
 export const updateTask = (id, task, diff) =>
-    (dispatch, getState) => {
+    (dispatch) => {
         const updatedTaskToCommitToReduxStore = {...task, ...diff};
         const diffToCommitToFirestore = {...diff};
 
