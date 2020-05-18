@@ -138,7 +138,7 @@ export const taskDiff = (initial, final, keysToDiff) => {
                 return {...taskDiffAcc, [k]: final_v};
             }
             else if (initial_v != null && final_v == null) {
-                return {...taskDiffAcc, [k]: firebase.firestore.FieldValue.delete()};
+                return {...taskDiffAcc, [k]: final_v};
             }
             else if (initial_v != null && final_v != null) {
                 if (dateFnsIsDate(initial_v)
