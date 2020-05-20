@@ -14,7 +14,7 @@ and deployed on Vercel (https://vercel.com).
 
 The part I like most is the very-fast sync across devices and the handling of external changes to a task that a user is currently editing.
 
-I normally program in Clojure\[Script\] so I used React and Redux to practice JavaScript with some mainstream tools. In keeping with making a static site for Vercel, I used React through Next.js. This is an interesting approach and seems to make a lot of sense &mdash; delivering a skeleton / template or truly static page through a CDN is fast and good for SEO.
+I normally program in Clojure\[Script\] so I used React and Redux, without any functional-programming libraries (like [Ramda](https://ramdajs.com/)), in order to practice mainstream JavaScript with mainstream tools. In keeping with making a static site for Vercel, I used React through Next.js. This is an interesting approach and seems to make a lot of sense &mdash; delivering a skeleton / template or truly static page through a CDN is fast and good for SEO.
 
 I considered Crux (https://opencrux.com) and Fauna (https://fauna.com) for their accrete-only data models but I would have had to have put together my own publish-subscribe (likely with [AWS AppSync](https://aws.amazon.com/appsync/). Firebase Cloud Firestore updates data in place, but it's made for publish-subscribe and so was a pragmatic choice for this exploratory project.
 
