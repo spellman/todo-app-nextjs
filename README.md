@@ -16,7 +16,7 @@ The part I like most is the very-fast sync across devices and the handling of ex
 
 I normally program in Clojure\[Script\] so I used React and Redux, without any functional-programming libraries (like [Ramda](https://ramdajs.com/)), in order to practice mainstream JavaScript with mainstream tools. In keeping with making a static site for Vercel, I used React through Next.js. This is an interesting approach and seems to make a lot of sense &mdash; delivering a skeleton / template or truly static page through a CDN is fast and good for SEO.
 
-I considered Crux (https://opencrux.com) and Fauna (https://fauna.com) for their accrete-only data models but I would have had to have put together my own publish-subscribe. Firebase Cloud Firestore updates data in place, but it's made for publish-subscribe and so was a pragmatic choice for this exploratory project.
+I considered Crux (https://opencrux.com) and Fauna (https://fauna.com) for their accrete-only data models but I would have had to have put together my own publish-subscribe. Firebase Cloud Firestore is made for publish-subscribe and so was a pragmatic choice for this exploratory project, even though it updates data in place.
 
 * The app displays instructions when there are no tasks in the list.
 * The "ADD TASK" button in the top right corner brings up a form to add a task.
@@ -35,7 +35,7 @@ I considered Crux (https://opencrux.com) and Fauna (https://fauna.com) for their
     * If the name, description, target completion date, or actual completion date of the task is edited, then user is informed via a flash message that does not auto dismiss. The user can choose to either continue editing and to overwite the external changes or to cancel editing and view the changes.
         * On sufficiently large screens, it would be nice to show the changed task or a diff of the changed task against the current form data. I didn't get that far yet.
     * If the task is deleted, then the user is informed via a flash message that does not auto dismiss. The user can choose to either continue editing (and create a new task with the information) or to cancel editing and accept the deletion.
-* I opted to make the app as easy to access and use as possible. Although Firebase makes auth and user accounts easy, I chose not to use them. Everyone interacts with the same task last. It's a demo :)
+* I opted to make the app as easy to access and use as possible. Although Firebase makes auth and user accounts easy, I chose not to use them. Everyone interacts with the same task list. It's a demo :)
 
 ## Notes
 I avoided versioning the Firestore documents. They really need to have version numbers that are incremented with each change (or an equivalent scheme) and then there needs to be a Firestore security rule that ensures that a document of lower version doesn't overwrite a document of higher version. (CouchDB does that automatically and would have been a valid choice here. I wanted to explore Firestore, though.) As is, if one user's update is received between when a second user clicks update and when their TaskEditForm view is replaced with a Task view, then the second user will have no idea that they overwrote the first user's change.
